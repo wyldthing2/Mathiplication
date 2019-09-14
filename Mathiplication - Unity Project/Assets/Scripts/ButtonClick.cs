@@ -16,10 +16,11 @@ public class ButtonClick : MonoBehaviour
         
     }
 
-    GameObject button;
+    TextMesh buttonTextMesh;
 
     void changeThisButtonText()
     {
-        button = this.GetComponent<GameObject>();
+        buttonTextMesh = this.GetComponentInChildren<TextMesh>();
+        buttonTextMesh.text = "Clicked";
     }
 }
