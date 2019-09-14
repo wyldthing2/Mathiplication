@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class ButtonClick : MonoBehaviour
 {
@@ -16,11 +17,11 @@ public class ButtonClick : MonoBehaviour
         
     }
 
-    TextMesh buttonTextMesh;
+    TMP_Text buttonTextMesh;
 
-    void changeThisButtonText()
+    public void changeThisButtonText()
     {
-        buttonTextMesh = this.GetComponentInChildren<TextMesh>();
+        buttonTextMesh = this.GetComponentInChildren<TMP_Text>();
         buttonTextMesh.text = "Clicked";
     }
 }
