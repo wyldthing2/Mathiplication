@@ -15,4 +15,11 @@ public class ButtonClick : MonoBehaviour
     {
         
     }
+
+    GameObject button;
+
+    void changeThisButtonText()
+    {
+        button = this.GetComponent<GameObject>();
+    }
 }
