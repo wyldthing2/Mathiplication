@@ -17,6 +17,9 @@ public class GameMaster : MonoBehaviour
     [SerializeField] public float CurrentGoalProgress = 0;
     [SerializeField] ProgressTracker myProgressTracker;
 
+    [SerializeField] GameObject CorrectSplosion;
+    [SerializeField] GameObject NotRightSplosion;
+
 
     // Start is called before the first frame update
     void Start()
@@ -35,6 +38,18 @@ public class GameMaster : MonoBehaviour
 
     }
 
+    //CheckAnswer Internal Functions 
+    void DeactivateObjectCorrectSplosion()
+    {
+        CorrectSplosion.SetActive(false);
+        
+    }
+    void DeactivateObjectNotRightSplosion()
+    {
+        NotRightSplosion.SetActive(false);
+
+    }
+
     public void CheckAnswer(int answer)
     {
         Debug.Log(answer);
@@ -50,7 +65,9 @@ public class GameMaster : MonoBehaviour
                 }
                 myProgressTracker.SetProgressBar(CurrentGoalProgress);
             }
-            
+
+            CorrectSplosion.SetActive(true);
+            Invoke("DeactivateObjectCorrectSplosion", 1);
             //activate CORRECT
             Debug.Log("Progress " + CurrentGoalProgress);
             setNumbers();
@@ -66,6 +83,8 @@ public class GameMaster : MonoBehaviour
             }
             CurrentGoalProgress = (float)MeatballCount / (float)CurrentGoal;
             myProgressTracker.SetProgressBar(CurrentGoalProgress);
+            NotRightSplosion.SetActive(true);
+            Invoke("DeactivateObjectNotRightSplosion", 1);
 
 
         }
