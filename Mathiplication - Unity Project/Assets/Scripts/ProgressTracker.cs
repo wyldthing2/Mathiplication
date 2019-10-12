@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ProgressTracker : MonoBehaviour
 {
-    [SerializeField] Slider ProgressBar;
+    [SerializeField] public Slider ProgressBar;
     [SerializeField] GameMaster gameMaster;
 
     // Start is called before the first frame update

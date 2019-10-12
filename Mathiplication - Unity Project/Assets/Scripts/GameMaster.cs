@@ -5,6 +5,9 @@ using TMPro;
 
 public class GameMaster : MonoBehaviour
 {
+    [SerializeField] GameObject meatballSource;
+    [SerializeField] LaunchMeatballs meatballLauncher;
+
     [SerializeField] TMP_Text FirstNumber;
     [SerializeField] TMP_Text SecondNumber;
     //[SerializeField] public List<AnswerNumber> AnswerList = new List<AnswerNumber>();
@@ -55,6 +58,8 @@ public class GameMaster : MonoBehaviour
         Debug.Log(answer);
         if (answer == num1 * num2)
         {
+            meatballLauncher.transform.position = meatballSource.transform.position;
+            meatballLauncher.CommandLaunchXNumberOfMeatballsAtThisYTransform(num1 * num2, meatballLauncher.transform, myProgressTracker.ProgressBar.transform);
             if (CurrentGoalProgress < 1)
             {
                 MeatballCount += answer;
