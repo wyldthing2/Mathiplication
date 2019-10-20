@@ -10,7 +10,7 @@ public class MeatballAI : MonoBehaviour
     [SerializeField] public float Friction;
     [SerializeField] public float Thrust;
     [SerializeField] public bool ThrustOn = false;
-    
+    [SerializeField] float MaxVelocity = 30;
 
     public void ThrustDelay()
     {
@@ -19,7 +19,7 @@ public class MeatballAI : MonoBehaviour
 
     public void TurnOnThrust()
     {
-        ThrustOn = !ThrustOn;
+        ThrustOn = true;
     }
 
     void movement()
@@ -30,7 +30,16 @@ public class MeatballAI : MonoBehaviour
 
     private void applyFriction()
     {
+        if (Mathf.Abs(meatballVelocity.magnitude) > .2)
+        {
             meatballVelocity -= Friction * meatballVelocity.normalized;
+        }
+        else
+        {
+            meatballVelocity.x = 0;
+            meatballVelocity.y = 0;
+        }
+
     }
 
     public void ThrustTowardTarget()
@@ -45,10 +54,22 @@ public class MeatballAI : MonoBehaviour
         meatballVelocity += thrustVector.normalized * Thrust;
     }
 
+    bool FrictionIsOn = true;
+
+    public void DelayFriction(float delayTime)
+    {
+        FrictionIsOn = false;
+        Invoke("frictionBackOn", delayTime);
+    }
+
+    void frictionBackOn()
+    {
+        FrictionIsOn = true;
+    }
 
     private void Update()
     {
-        if (ThrustOn)
+        if (ThrustOn && Mathf.Abs(meatballVelocity.magnitude) < MaxVelocity)
         {
             ThrustTowardTarget();
         }
@@ -56,14 +77,23 @@ public class MeatballAI : MonoBehaviour
         if (meatballVelocity.x != 0 || meatballVelocity.y != 0)
         {
             movement();
-            applyFriction();
+            if (FrictionIsOn)
+            {
+                applyFriction();
+            }
         }
 
-        if (5 > Mathf.Abs(this.transform.position.x - MeatballTarget.x) && 5 > Mathf.Abs(this.transform.position.y - MeatballTarget.y))
+        //if (5 > Mathf.Abs(this.transform.position.x - MeatballTarget.x) && 5 > Mathf.Abs(this.transform.position.y - MeatballTarget.y))
+        //{
+        //    TurnOnThrust();
+        //}
+
+        if (1 > Mathf.Abs(this.transform.position.x - MeatballTarget.x) && 1 > Mathf.Abs(this.transform.position.y - MeatballTarget.y))
         {
-            TurnOnThrust();
+            ThrustOn = false;
+            this.gameObject.SetActive(false);
         }
-        
+
     }
 
     public void Deactivate()

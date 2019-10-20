@@ -12,7 +12,7 @@ public class LaunchMeatballs : MonoBehaviour
     [SerializeField] MeatballsList meatballsList;
     [SerializeField] Vector3 origin;
     [SerializeField] Vector3 target;
-    [SerializeField] float driftSpeed = 1.5f;
+    [SerializeField] float driftSpeed = 4f;
 
     public void CommandLaunchXNumberOfMeatballsAtThisYTransform(int meatballnumber, Transform launcherOrigin, Transform launcherTarget)
     {
@@ -34,6 +34,7 @@ public class LaunchMeatballs : MonoBehaviour
         meatballsList.MeatBalls[meatballsList.NextMeatballInQueue].GetComponent<MeatballAI>().meatballVelocity = new Vector2(Random.value*driftSpeed, Random.value*driftSpeed);
         meatballsList.MeatBalls[meatballsList.NextMeatballInQueue].GetComponent<MeatballAI>().MeatballTarget = new Vector2(target.x, target.y);
         meatballsList.MeatBalls[meatballsList.NextMeatballInQueue].GetComponent<MeatballAI>().ThrustDelay();
+        meatballsList.MeatBalls[meatballsList.NextMeatballInQueue].GetComponent<MeatballAI>().DelayFriction(1f);
 
         if (meatballsList.MeatBalls.Count-1 > meatballsList.NextMeatballInQueue)
         {

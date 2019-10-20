@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class GameMaster : MonoBehaviour
 {
+    [SerializeField] SaveManager saveManager;
+
     [SerializeField] GameObject meatballSource;
     [SerializeField] LaunchMeatballs meatballLauncher;
 
@@ -18,17 +21,29 @@ public class GameMaster : MonoBehaviour
     [SerializeField] public int MeatballCount = 0;
     [SerializeField] public int CurrentGoal = 100;
     [SerializeField] public float CurrentGoalProgress = 0;
+    [SerializeField] float CurrentGoalWorkInProgress = 0;
+    [SerializeField] TMP_Text meatballCountDisplay;
     [SerializeField] ProgressTracker myProgressTracker;
+    [SerializeField] Slider myProgressTrackerWorkInProgress;
+    [SerializeField] float progressBarSpeed = 1;
+
 
     [SerializeField] GameObject CorrectSplosion;
     [SerializeField] GameObject NotRightSplosion;
 
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         TheGameMaster = this;
         setNumbers();
+        saveManager.Load();
+        MeatballCount = saveManager.ThisSaveState.MeatballCount;
+        meatballCountDisplay.text = MeatballCount.ToString();
+        CurrentGoalProgress = (float)MeatballCount / (float)CurrentGoal;
+        myProgressTracker.SetProgressBar(CurrentGoalProgress);
+        CurrentGoalWorkInProgress = CurrentGoalProgress;
+        myProgressTrackerWorkInProgress.value = CurrentGoalWorkInProgress;
 
     }
 
@@ -93,11 +108,18 @@ public class GameMaster : MonoBehaviour
 
 
         }
+
+        //update the save state script
+        saveManager.ThisSaveState.MeatballCount = MeatballCount;
+        //run save()
+        saveManager.Save();
+        meatballCountDisplay.text = MeatballCount.ToString("n0");
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        CurrentGoalWorkInProgress = Mathf.Lerp(CurrentGoalWorkInProgress, CurrentGoalProgress, Time.deltaTime);
+        myProgressTrackerWorkInProgress.value = CurrentGoalWorkInProgress;
     }
 }
