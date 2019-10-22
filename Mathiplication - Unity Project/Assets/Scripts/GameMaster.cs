@@ -19,13 +19,23 @@ public class GameMaster : MonoBehaviour
     [SerializeField] int num2;
 
     [SerializeField] public int MeatballCount = 0;
+    [SerializeField] int MeatballsShippedCount = 0;
+    [SerializeField] float accummulatingMeatball = 0;
+
+    //For Upgrades
+    [SerializeField] public float MeatballPackingPerSecond = .1f;
+    [SerializeField] public float MeatballsPerAnswer = 1;
+
+
     [SerializeField] public int CurrentGoal = 100;
     [SerializeField] public float CurrentGoalProgress = 0;
     [SerializeField] float CurrentGoalWorkInProgress = 0;
     [SerializeField] TMP_Text meatballCountDisplay;
     [SerializeField] ProgressTracker myProgressTracker;
     [SerializeField] Slider myProgressTrackerWorkInProgress;
-    [SerializeField] float progressBarSpeed = 1;
+    [SerializeField] public float MeatballShippingTime = .1f;
+
+
 
 
     [SerializeField] GameObject CorrectSplosion;
@@ -39,11 +49,13 @@ public class GameMaster : MonoBehaviour
         setNumbers();
         saveManager.Load();
         MeatballCount = saveManager.ThisSaveState.MeatballCount;
-        meatballCountDisplay.text = MeatballCount.ToString();
+        meatballCountDisplay.text = MeatballCount.ToString("n0");
         CurrentGoalProgress = (float)MeatballCount / (float)CurrentGoal;
         myProgressTracker.SetProgressBar(CurrentGoalProgress);
-        CurrentGoalWorkInProgress = CurrentGoalProgress;
+        MeatballsShippedCount = saveManager.ThisSaveState.MeatballsShippedCount;
+        CurrentGoalWorkInProgress = (float)MeatballsShippedCount/(float)CurrentGoal;
         myProgressTrackerWorkInProgress.value = CurrentGoalWorkInProgress;
+        InvokeRepeating("ShipMeatballs", 0, MeatballShippingTime);
 
     }
 
@@ -111,15 +123,44 @@ public class GameMaster : MonoBehaviour
 
         //update the save state script
         saveManager.ThisSaveState.MeatballCount = MeatballCount;
+        
         //run save()
         saveManager.Save();
-        meatballCountDisplay.text = MeatballCount.ToString("n0");
+        
+    }
+
+    void ShipMeatballs()
+    {
+        if (MeatballsShippedCount < MeatballCount)
+        {
+            //add to meatball
+            accummulatingMeatball += MeatballPackingPerSecond / 10;
+            Debug.Log("Accummulated: " + accummulatingMeatball);
+            //is it greater than 1? Then Do it!
+            if (accummulatingMeatball > 1)
+            {
+                MeatballsShippedCount += Mathf.RoundToInt(accummulatingMeatball);
+                accummulatingMeatball = 0;
+                CurrentGoalWorkInProgress = (float)MeatballsShippedCount / (float)CurrentGoal;
+                myProgressTrackerWorkInProgress.value = CurrentGoalWorkInProgress;
+                meatballCountDisplay.text = MeatballsShippedCount.ToString("n0");
+
+                saveManager.ThisSaveState.MeatballsShippedCount = MeatballsShippedCount;
+            }
+        }
+        else if (MeatballsShippedCount > MeatballCount)
+        {
+            MeatballsShippedCount = MeatballCount;
+            CurrentGoalWorkInProgress = (float)MeatballsShippedCount / (float)CurrentGoal;
+            myProgressTrackerWorkInProgress.value = CurrentGoalWorkInProgress;
+            meatballCountDisplay.text = MeatballsShippedCount.ToString("n0");
+
+            saveManager.ThisSaveState.MeatballsShippedCount = MeatballsShippedCount;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        CurrentGoalWorkInProgress = Mathf.Lerp(CurrentGoalWorkInProgress, CurrentGoalProgress, Time.deltaTime);
-        myProgressTrackerWorkInProgress.value = CurrentGoalWorkInProgress;
     }
 }

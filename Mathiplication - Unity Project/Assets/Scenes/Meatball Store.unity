@@ -5732,13 +5732,17 @@ MonoBehaviour:
   num1: 0
   num2: 0
   MeatballCount: 0
-  CurrentGoal: 100
+  MeatballsShippedCount: 0
+  accummulatingMeatball: 0
+  MeatballPackingPerSecond: 0.1
+  MeatballsPerAnswer: 1
+  CurrentGoal: 10
   CurrentGoalProgress: 0
   CurrentGoalWorkInProgress: 0
   meatballCountDisplay: {fileID: 142071168}
   myProgressTracker: {fileID: 981802497}
   myProgressTrackerWorkInProgress: {fileID: 396588798}
-  progressBarSpeed: 100
+  MeatballShippingTime: 0.1
   CorrectSplosion: {fileID: 982098170}
   NotRightSplosion: {fileID: 1633453456}
 --- !u!114 &981802497
