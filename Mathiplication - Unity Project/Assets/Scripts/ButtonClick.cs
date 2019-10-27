@@ -32,7 +32,7 @@ public class ButtonClick : MonoBehaviour
     {
         buttonTextMesh = this.GetComponentInChildren<TMP_Text>();
         buttonTextMesh.text = "Clicked";
-        velocity += 1;
+        //velocity += 1;
         float objectWrapper = buttonTextMesh.GetComponent<RectTransform>().rect.height / 2;
     }
 
